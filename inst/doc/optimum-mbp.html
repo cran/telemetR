@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>optimum-mbp</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">optimum-mbp</h1>
+
+
+
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(telemetR)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> telemetR<span class="sc">::</span>fish</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>receivers <span class="ot">&lt;-</span> telemetR<span class="sc">::</span>receivers</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>detects <span class="ot">&lt;-</span> telemetR<span class="sc">::</span>filtered_detections</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>local_tz <span class="ot">&lt;-</span> <span class="st">&quot;America/Los_Angeles&quot;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fish <span class="ot">&lt;-</span> <span class="fu">format_org</span>(fish, </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">var_Id =</span> <span class="st">&quot;TagCode&quot;</span>, </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">var_release =</span> <span class="st">&quot;Release_Date&quot;</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">var_tag_life =</span> <span class="st">&quot;TagLife&quot;</span>,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">var_ping_rate =</span> <span class="st">&quot;PRI&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                   <span class="at">local_time_zone =</span> local_tz,</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                   <span class="at">time_format =</span> <span class="st">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>receivers <span class="ot">&lt;-</span> <span class="fu">format_receivers</span>(receivers,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                              <span class="at">var_receiver_serial =</span> <span class="st">&quot;receiver_serial_number&quot;</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                              <span class="at">var_receiver_make =</span> <span class="st">&quot;receiver_make&quot;</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                              <span class="at">var_receiver_deploy =</span> <span class="st">&quot;receiver_start&quot;</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>                              <span class="at">var_receiver_retrieve =</span> <span class="st">&quot;receiver_end&quot;</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>                              <span class="at">local_time_zone =</span> local_tz,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>                              <span class="at">time_format =</span> <span class="st">&quot;%m/%d/%Y %H:%M:%S&quot;</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>detects <span class="ot">&lt;-</span> <span class="fu">format_detects</span>(detects,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>                          <span class="at">var_Id =</span> <span class="st">&quot;Tag_Code&quot;</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                          <span class="at">var_datetime_local =</span> <span class="st">&quot;DateTime_Local&quot;</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                          <span class="at">var_receiver_serial =</span> <span class="st">&quot;ReceiverSN&quot;</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>                          <span class="at">local_time_zone =</span> local_tz,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>                          <span class="at">time_format =</span> <span class="st">&quot;%Y-%m-%d %H:%M:%S&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a new df which uses a range of blanking times to reprocess the original</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># detection data (this is a slow process, especially for large datasets or</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># large sequences of n)</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>blanked <span class="ot">&lt;-</span> <span class="fu">blanking_event</span>(detects,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                     <span class="co">#Each general location is distinct enough to be a site</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                     <span class="at">var_site =</span> <span class="st">&quot;receiver_general_location&quot;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                     <span class="co">#Group the data by species, run, and origin (optional)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                     <span class="at">var_groups =</span> <span class="st">&quot;fish_type&quot;</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">var_Id =</span> <span class="st">&quot;Tag_Code&quot;</span>,</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">var_datetime =</span> <span class="st">&quot;DateTime_Local&quot;</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">var_ping_rate =</span> <span class="st">&quot;tag_pulse_rate_interval_nominal&quot;</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                     <span class="at">n_val =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">1000</span>,<span class="dv">5</span>),</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                     <span class="co">#Pulse rates for these tags are in seconds</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                     <span class="at">time_unit =</span> <span class="st">&quot;secs&quot;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>                     )</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(blanked)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 9</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   fish_type     Tag_Code mbp_n event_change receiver_general_location</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;chr&gt;    &lt;dbl&gt;        &lt;int&gt; &lt;chr&gt;                    </span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 MRH Steelhead 70A3         3            0 Grant_Line_DS            </span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 MRH Steelhead 70A3         3            1 Grant_Line_DS            </span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 MRH Steelhead 70A3         3            2 Grant_Line_DS            </span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 MRH Steelhead 70A3         3            3 Grant_Line_DS            </span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 MRH Steelhead 70A3         3            4 Grant_Line_DS            </span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 MRH Steelhead 70A3         3            5 Grant_Line_DS            </span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # ℹ 4 more variables: start_time &lt;dttm&gt;, end_time &lt;dttm&gt;, n_det &lt;int&gt;,</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; #   duration &lt;dbl&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This function compares the durations of the events created above. The function</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># collects all the events for each given blanking period and compares each</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># event duration to a sequence of given times. It then calculates the proportion</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># of events which are longer than each given time for each blanking period for</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># each organism group</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>compared <span class="ot">&lt;-</span> <span class="fu">duration_compare</span>(blanked, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                             <span class="at">var_groups =</span> <span class="st">&quot;fish_type&quot;</span>, </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                             <span class="at">time_seq =</span> <span class="fu">seq</span>(<span class="dv">1</span>,<span class="dv">10000</span>,<span class="dv">10</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">11</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">21</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">31</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">41</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">51</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">61</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">71</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">81</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">91</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">101</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">111</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">121</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">131</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">141</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">151</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">161</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">171</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">181</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">191</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">201</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">211</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">221</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">231</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">241</span></span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">251</span></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">261</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">271</span></span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">281</span></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">291</span></span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">301</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">311</span></span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">321</span></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">331</span></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">341</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">351</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">361</span></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">371</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">381</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">391</span></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">401</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">411</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">421</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">431</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">441</span></span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">451</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">461</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">471</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">481</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">491</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">501</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">511</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">521</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">531</span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">541</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">551</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">561</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">571</span></span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">581</span></span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">591</span></span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">601</span></span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">611</span></span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">621</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">631</span></span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">641</span></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">651</span></span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">661</span></span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">671</span></span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">681</span></span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">691</span></span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">701</span></span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">711</span></span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">721</span></span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">731</span></span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">741</span></span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">751</span></span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">761</span></span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">771</span></span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">781</span></span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">791</span></span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">801</span></span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">811</span></span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">821</span></span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">831</span></span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">841</span></span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">851</span></span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">861</span></span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">871</span></span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">881</span></span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">891</span></span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">901</span></span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">911</span></span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">921</span></span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">931</span></span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">941</span></span>
+<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">951</span></span>
+<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">961</span></span>
+<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">971</span></span>
+<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">981</span></span>
+<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">991</span></span>
+<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1001</span></span>
+<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1011</span></span>
+<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1021</span></span>
+<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1031</span></span>
+<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1041</span></span>
+<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1051</span></span>
+<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1061</span></span>
+<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1071</span></span>
+<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1081</span></span>
+<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1091</span></span>
+<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1101</span></span>
+<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1111</span></span>
+<span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1121</span></span>
+<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1131</span></span>
+<span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1141</span></span>
+<span id="cb5-127"><a href="#cb5-127" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1151</span></span>
+<span id="cb5-128"><a href="#cb5-128" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1161</span></span>
+<span id="cb5-129"><a href="#cb5-129" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1171</span></span>
+<span id="cb5-130"><a href="#cb5-130" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1181</span></span>
+<span id="cb5-131"><a href="#cb5-131" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1191</span></span>
+<span id="cb5-132"><a href="#cb5-132" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1201</span></span>
+<span id="cb5-133"><a href="#cb5-133" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1211</span></span>
+<span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1221</span></span>
+<span id="cb5-135"><a href="#cb5-135" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1231</span></span>
+<span id="cb5-136"><a href="#cb5-136" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1241</span></span>
+<span id="cb5-137"><a href="#cb5-137" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1251</span></span>
+<span id="cb5-138"><a href="#cb5-138" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1261</span></span>
+<span id="cb5-139"><a href="#cb5-139" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1271</span></span>
+<span id="cb5-140"><a href="#cb5-140" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1281</span></span>
+<span id="cb5-141"><a href="#cb5-141" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1291</span></span>
+<span id="cb5-142"><a href="#cb5-142" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1301</span></span>
+<span id="cb5-143"><a href="#cb5-143" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1311</span></span>
+<span id="cb5-144"><a href="#cb5-144" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1321</span></span>
+<span id="cb5-145"><a href="#cb5-145" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1331</span></span>
+<span id="cb5-146"><a href="#cb5-146" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1341</span></span>
+<span id="cb5-147"><a href="#cb5-147" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1351</span></span>
+<span id="cb5-148"><a href="#cb5-148" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1361</span></span>
+<span id="cb5-149"><a href="#cb5-149" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1371</span></span>
+<span id="cb5-150"><a href="#cb5-150" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1381</span></span>
+<span id="cb5-151"><a href="#cb5-151" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1391</span></span>
+<span id="cb5-152"><a href="#cb5-152" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1401</span></span>
+<span id="cb5-153"><a href="#cb5-153" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1411</span></span>
+<span id="cb5-154"><a href="#cb5-154" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1421</span></span>
+<span id="cb5-155"><a href="#cb5-155" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1431</span></span>
+<span id="cb5-156"><a href="#cb5-156" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1441</span></span>
+<span id="cb5-157"><a href="#cb5-157" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1451</span></span>
+<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1461</span></span>
+<span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1471</span></span>
+<span id="cb5-160"><a href="#cb5-160" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1481</span></span>
+<span id="cb5-161"><a href="#cb5-161" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1491</span></span>
+<span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1501</span></span>
+<span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1511</span></span>
+<span id="cb5-164"><a href="#cb5-164" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1521</span></span>
+<span id="cb5-165"><a href="#cb5-165" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1531</span></span>
+<span id="cb5-166"><a href="#cb5-166" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1541</span></span>
+<span id="cb5-167"><a href="#cb5-167" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1551</span></span>
+<span id="cb5-168"><a href="#cb5-168" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1561</span></span>
+<span id="cb5-169"><a href="#cb5-169" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1571</span></span>
+<span id="cb5-170"><a href="#cb5-170" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1581</span></span>
+<span id="cb5-171"><a href="#cb5-171" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1591</span></span>
+<span id="cb5-172"><a href="#cb5-172" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1601</span></span>
+<span id="cb5-173"><a href="#cb5-173" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1611</span></span>
+<span id="cb5-174"><a href="#cb5-174" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1621</span></span>
+<span id="cb5-175"><a href="#cb5-175" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1631</span></span>
+<span id="cb5-176"><a href="#cb5-176" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1641</span></span>
+<span id="cb5-177"><a href="#cb5-177" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1651</span></span>
+<span id="cb5-178"><a href="#cb5-178" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1661</span></span>
+<span id="cb5-179"><a href="#cb5-179" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1671</span></span>
+<span id="cb5-180"><a href="#cb5-180" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1681</span></span>
+<span id="cb5-181"><a href="#cb5-181" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1691</span></span>
+<span id="cb5-182"><a href="#cb5-182" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1701</span></span>
+<span id="cb5-183"><a href="#cb5-183" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1711</span></span>
+<span id="cb5-184"><a href="#cb5-184" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1721</span></span>
+<span id="cb5-185"><a href="#cb5-185" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1731</span></span>
+<span id="cb5-186"><a href="#cb5-186" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1741</span></span>
+<span id="cb5-187"><a href="#cb5-187" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1751</span></span>
+<span id="cb5-188"><a href="#cb5-188" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1761</span></span>
+<span id="cb5-189"><a href="#cb5-189" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1771</span></span>
+<span id="cb5-190"><a href="#cb5-190" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1781</span></span>
+<span id="cb5-191"><a href="#cb5-191" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1791</span></span>
+<span id="cb5-192"><a href="#cb5-192" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1801</span></span>
+<span id="cb5-193"><a href="#cb5-193" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1811</span></span>
+<span id="cb5-194"><a href="#cb5-194" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1821</span></span>
+<span id="cb5-195"><a href="#cb5-195" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1831</span></span>
+<span id="cb5-196"><a href="#cb5-196" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1841</span></span>
+<span id="cb5-197"><a href="#cb5-197" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1851</span></span>
+<span id="cb5-198"><a href="#cb5-198" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1861</span></span>
+<span id="cb5-199"><a href="#cb5-199" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1871</span></span>
+<span id="cb5-200"><a href="#cb5-200" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1881</span></span>
+<span id="cb5-201"><a href="#cb5-201" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1891</span></span>
+<span id="cb5-202"><a href="#cb5-202" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1901</span></span>
+<span id="cb5-203"><a href="#cb5-203" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1911</span></span>
+<span id="cb5-204"><a href="#cb5-204" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1921</span></span>
+<span id="cb5-205"><a href="#cb5-205" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1931</span></span>
+<span id="cb5-206"><a href="#cb5-206" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1941</span></span>
+<span id="cb5-207"><a href="#cb5-207" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1951</span></span>
+<span id="cb5-208"><a href="#cb5-208" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1961</span></span>
+<span id="cb5-209"><a href="#cb5-209" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1971</span></span>
+<span id="cb5-210"><a href="#cb5-210" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1981</span></span>
+<span id="cb5-211"><a href="#cb5-211" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">1991</span></span>
+<span id="cb5-212"><a href="#cb5-212" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2001</span></span>
+<span id="cb5-213"><a href="#cb5-213" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2011</span></span>
+<span id="cb5-214"><a href="#cb5-214" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2021</span></span>
+<span id="cb5-215"><a href="#cb5-215" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2031</span></span>
+<span id="cb5-216"><a href="#cb5-216" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2041</span></span>
+<span id="cb5-217"><a href="#cb5-217" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2051</span></span>
+<span id="cb5-218"><a href="#cb5-218" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2061</span></span>
+<span id="cb5-219"><a href="#cb5-219" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2071</span></span>
+<span id="cb5-220"><a href="#cb5-220" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2081</span></span>
+<span id="cb5-221"><a href="#cb5-221" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2091</span></span>
+<span id="cb5-222"><a href="#cb5-222" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2101</span></span>
+<span id="cb5-223"><a href="#cb5-223" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2111</span></span>
+<span id="cb5-224"><a href="#cb5-224" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2121</span></span>
+<span id="cb5-225"><a href="#cb5-225" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2131</span></span>
+<span id="cb5-226"><a href="#cb5-226" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2141</span></span>
+<span id="cb5-227"><a href="#cb5-227" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2151</span></span>
+<span id="cb5-228"><a href="#cb5-228" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2161</span></span>
+<span id="cb5-229"><a href="#cb5-229" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2171</span></span>
+<span id="cb5-230"><a href="#cb5-230" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2181</span></span>
+<span id="cb5-231"><a href="#cb5-231" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2191</span></span>
+<span id="cb5-232"><a href="#cb5-232" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2201</span></span>
+<span id="cb5-233"><a href="#cb5-233" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2211</span></span>
+<span id="cb5-234"><a href="#cb5-234" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2221</span></span>
+<span id="cb5-235"><a href="#cb5-235" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2231</span></span>
+<span id="cb5-236"><a href="#cb5-236" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2241</span></span>
+<span id="cb5-237"><a href="#cb5-237" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2251</span></span>
+<span id="cb5-238"><a href="#cb5-238" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2261</span></span>
+<span id="cb5-239"><a href="#cb5-239" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2271</span></span>
+<span id="cb5-240"><a href="#cb5-240" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2281</span></span>
+<span id="cb5-241"><a href="#cb5-241" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2291</span></span>
+<span id="cb5-242"><a href="#cb5-242" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2301</span></span>
+<span id="cb5-243"><a href="#cb5-243" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2311</span></span>
+<span id="cb5-244"><a href="#cb5-244" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2321</span></span>
+<span id="cb5-245"><a href="#cb5-245" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2331</span></span>
+<span id="cb5-246"><a href="#cb5-246" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2341</span></span>
+<span id="cb5-247"><a href="#cb5-247" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2351</span></span>
+<span id="cb5-248"><a href="#cb5-248" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2361</span></span>
+<span id="cb5-249"><a href="#cb5-249" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2371</span></span>
+<span id="cb5-250"><a href="#cb5-250" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2381</span></span>
+<span id="cb5-251"><a href="#cb5-251" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2391</span></span>
+<span id="cb5-252"><a href="#cb5-252" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2401</span></span>
+<span id="cb5-253"><a href="#cb5-253" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2411</span></span>
+<span id="cb5-254"><a href="#cb5-254" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2421</span></span>
+<span id="cb5-255"><a href="#cb5-255" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2431</span></span>
+<span id="cb5-256"><a href="#cb5-256" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2441</span></span>
+<span id="cb5-257"><a href="#cb5-257" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2451</span></span>
+<span id="cb5-258"><a href="#cb5-258" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2461</span></span>
+<span id="cb5-259"><a href="#cb5-259" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2471</span></span>
+<span id="cb5-260"><a href="#cb5-260" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2481</span></span>
+<span id="cb5-261"><a href="#cb5-261" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2491</span></span>
+<span id="cb5-262"><a href="#cb5-262" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2501</span></span>
+<span id="cb5-263"><a href="#cb5-263" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2511</span></span>
+<span id="cb5-264"><a href="#cb5-264" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2521</span></span>
+<span id="cb5-265"><a href="#cb5-265" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2531</span></span>
+<span id="cb5-266"><a href="#cb5-266" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2541</span></span>
+<span id="cb5-267"><a href="#cb5-267" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2551</span></span>
+<span id="cb5-268"><a href="#cb5-268" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2561</span></span>
+<span id="cb5-269"><a href="#cb5-269" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2571</span></span>
+<span id="cb5-270"><a href="#cb5-270" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2581</span></span>
+<span id="cb5-271"><a href="#cb5-271" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2591</span></span>
+<span id="cb5-272"><a href="#cb5-272" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2601</span></span>
+<span id="cb5-273"><a href="#cb5-273" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2611</span></span>
+<span id="cb5-274"><a href="#cb5-274" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2621</span></span>
+<span id="cb5-275"><a href="#cb5-275" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2631</span></span>
+<span id="cb5-276"><a href="#cb5-276" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2641</span></span>
+<span id="cb5-277"><a href="#cb5-277" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2651</span></span>
+<span id="cb5-278"><a href="#cb5-278" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2661</span></span>
+<span id="cb5-279"><a href="#cb5-279" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2671</span></span>
+<span id="cb5-280"><a href="#cb5-280" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2681</span></span>
+<span id="cb5-281"><a href="#cb5-281" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2691</span></span>
+<span id="cb5-282"><a href="#cb5-282" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2701</span></span>
+<span id="cb5-283"><a href="#cb5-283" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2711</span></span>
+<span id="cb5-284"><a href="#cb5-284" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2721</span></span>
+<span id="cb5-285"><a href="#cb5-285" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2731</span></span>
+<span id="cb5-286"><a href="#cb5-286" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2741</span></span>
+<span id="cb5-287"><a href="#cb5-287" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2751</span></span>
+<span id="cb5-288"><a href="#cb5-288" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2761</span></span>
+<span id="cb5-289"><a href="#cb5-289" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2771</span></span>
+<span id="cb5-290"><a href="#cb5-290" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2781</span></span>
+<span id="cb5-291"><a href="#cb5-291" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2791</span></span>
+<span id="cb5-292"><a href="#cb5-292" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2801</span></span>
+<span id="cb5-293"><a href="#cb5-293" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2811</span></span>
+<span id="cb5-294"><a href="#cb5-294" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2821</span></span>
+<span id="cb5-295"><a href="#cb5-295" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2831</span></span>
+<span id="cb5-296"><a href="#cb5-296" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2841</span></span>
+<span id="cb5-297"><a href="#cb5-297" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2851</span></span>
+<span id="cb5-298"><a href="#cb5-298" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2861</span></span>
+<span id="cb5-299"><a href="#cb5-299" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2871</span></span>
+<span id="cb5-300"><a href="#cb5-300" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2881</span></span>
+<span id="cb5-301"><a href="#cb5-301" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2891</span></span>
+<span id="cb5-302"><a href="#cb5-302" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2901</span></span>
+<span id="cb5-303"><a href="#cb5-303" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2911</span></span>
+<span id="cb5-304"><a href="#cb5-304" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2921</span></span>
+<span id="cb5-305"><a href="#cb5-305" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2931</span></span>
+<span id="cb5-306"><a href="#cb5-306" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2941</span></span>
+<span id="cb5-307"><a href="#cb5-307" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2951</span></span>
+<span id="cb5-308"><a href="#cb5-308" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2961</span></span>
+<span id="cb5-309"><a href="#cb5-309" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2971</span></span>
+<span id="cb5-310"><a href="#cb5-310" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2981</span></span>
+<span id="cb5-311"><a href="#cb5-311" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">2991</span></span>
+<span id="cb5-312"><a href="#cb5-312" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3001</span></span>
+<span id="cb5-313"><a href="#cb5-313" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3011</span></span>
+<span id="cb5-314"><a href="#cb5-314" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3021</span></span>
+<span id="cb5-315"><a href="#cb5-315" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3031</span></span>
+<span id="cb5-316"><a href="#cb5-316" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3041</span></span>
+<span id="cb5-317"><a href="#cb5-317" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3051</span></span>
+<span id="cb5-318"><a href="#cb5-318" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3061</span></span>
+<span id="cb5-319"><a href="#cb5-319" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3071</span></span>
+<span id="cb5-320"><a href="#cb5-320" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3081</span></span>
+<span id="cb5-321"><a href="#cb5-321" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3091</span></span>
+<span id="cb5-322"><a href="#cb5-322" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3101</span></span>
+<span id="cb5-323"><a href="#cb5-323" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3111</span></span>
+<span id="cb5-324"><a href="#cb5-324" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3121</span></span>
+<span id="cb5-325"><a href="#cb5-325" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3131</span></span>
+<span id="cb5-326"><a href="#cb5-326" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3141</span></span>
+<span id="cb5-327"><a href="#cb5-327" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3151</span></span>
+<span id="cb5-328"><a href="#cb5-328" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3161</span></span>
+<span id="cb5-329"><a href="#cb5-329" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3171</span></span>
+<span id="cb5-330"><a href="#cb5-330" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3181</span></span>
+<span id="cb5-331"><a href="#cb5-331" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3191</span></span>
+<span id="cb5-332"><a href="#cb5-332" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3201</span></span>
+<span id="cb5-333"><a href="#cb5-333" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3211</span></span>
+<span id="cb5-334"><a href="#cb5-334" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3221</span></span>
+<span id="cb5-335"><a href="#cb5-335" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3231</span></span>
+<span id="cb5-336"><a href="#cb5-336" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3241</span></span>
+<span id="cb5-337"><a href="#cb5-337" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3251</span></span>
+<span id="cb5-338"><a href="#cb5-338" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3261</span></span>
+<span id="cb5-339"><a href="#cb5-339" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3271</span></span>
+<span id="cb5-340"><a href="#cb5-340" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3281</span></span>
+<span id="cb5-341"><a href="#cb5-341" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3291</span></span>
+<span id="cb5-342"><a href="#cb5-342" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3301</span></span>
+<span id="cb5-343"><a href="#cb5-343" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3311</span></span>
+<span id="cb5-344"><a href="#cb5-344" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3321</span></span>
+<span id="cb5-345"><a href="#cb5-345" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3331</span></span>
+<span id="cb5-346"><a href="#cb5-346" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3341</span></span>
+<span id="cb5-347"><a href="#cb5-347" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3351</span></span>
+<span id="cb5-348"><a href="#cb5-348" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3361</span></span>
+<span id="cb5-349"><a href="#cb5-349" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3371</span></span>
+<span id="cb5-350"><a href="#cb5-350" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3381</span></span>
+<span id="cb5-351"><a href="#cb5-351" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3391</span></span>
+<span id="cb5-352"><a href="#cb5-352" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3401</span></span>
+<span id="cb5-353"><a href="#cb5-353" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3411</span></span>
+<span id="cb5-354"><a href="#cb5-354" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3421</span></span>
+<span id="cb5-355"><a href="#cb5-355" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3431</span></span>
+<span id="cb5-356"><a href="#cb5-356" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3441</span></span>
+<span id="cb5-357"><a href="#cb5-357" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3451</span></span>
+<span id="cb5-358"><a href="#cb5-358" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3461</span></span>
+<span id="cb5-359"><a href="#cb5-359" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3471</span></span>
+<span id="cb5-360"><a href="#cb5-360" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3481</span></span>
+<span id="cb5-361"><a href="#cb5-361" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3491</span></span>
+<span id="cb5-362"><a href="#cb5-362" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3501</span></span>
+<span id="cb5-363"><a href="#cb5-363" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3511</span></span>
+<span id="cb5-364"><a href="#cb5-364" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3521</span></span>
+<span id="cb5-365"><a href="#cb5-365" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3531</span></span>
+<span id="cb5-366"><a href="#cb5-366" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3541</span></span>
+<span id="cb5-367"><a href="#cb5-367" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3551</span></span>
+<span id="cb5-368"><a href="#cb5-368" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3561</span></span>
+<span id="cb5-369"><a href="#cb5-369" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3571</span></span>
+<span id="cb5-370"><a href="#cb5-370" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3581</span></span>
+<span id="cb5-371"><a href="#cb5-371" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3591</span></span>
+<span id="cb5-372"><a href="#cb5-372" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3601</span></span>
+<span id="cb5-373"><a href="#cb5-373" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3611</span></span>
+<span id="cb5-374"><a href="#cb5-374" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3621</span></span>
+<span id="cb5-375"><a href="#cb5-375" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3631</span></span>
+<span id="cb5-376"><a href="#cb5-376" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3641</span></span>
+<span id="cb5-377"><a href="#cb5-377" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3651</span></span>
+<span id="cb5-378"><a href="#cb5-378" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3661</span></span>
+<span id="cb5-379"><a href="#cb5-379" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3671</span></span>
+<span id="cb5-380"><a href="#cb5-380" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3681</span></span>
+<span id="cb5-381"><a href="#cb5-381" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3691</span></span>
+<span id="cb5-382"><a href="#cb5-382" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3701</span></span>
+<span id="cb5-383"><a href="#cb5-383" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3711</span></span>
+<span id="cb5-384"><a href="#cb5-384" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3721</span></span>
+<span id="cb5-385"><a href="#cb5-385" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3731</span></span>
+<span id="cb5-386"><a href="#cb5-386" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3741</span></span>
+<span id="cb5-387"><a href="#cb5-387" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3751</span></span>
+<span id="cb5-388"><a href="#cb5-388" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3761</span></span>
+<span id="cb5-389"><a href="#cb5-389" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3771</span></span>
+<span id="cb5-390"><a href="#cb5-390" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3781</span></span>
+<span id="cb5-391"><a href="#cb5-391" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3791</span></span>
+<span id="cb5-392"><a href="#cb5-392" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3801</span></span>
+<span id="cb5-393"><a href="#cb5-393" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3811</span></span>
+<span id="cb5-394"><a href="#cb5-394" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3821</span></span>
+<span id="cb5-395"><a href="#cb5-395" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3831</span></span>
+<span id="cb5-396"><a href="#cb5-396" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3841</span></span>
+<span id="cb5-397"><a href="#cb5-397" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3851</span></span>
+<span id="cb5-398"><a href="#cb5-398" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3861</span></span>
+<span id="cb5-399"><a href="#cb5-399" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3871</span></span>
+<span id="cb5-400"><a href="#cb5-400" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3881</span></span>
+<span id="cb5-401"><a href="#cb5-401" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3891</span></span>
+<span id="cb5-402"><a href="#cb5-402" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3901</span></span>
+<span id="cb5-403"><a href="#cb5-403" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3911</span></span>
+<span id="cb5-404"><a href="#cb5-404" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3921</span></span>
+<span id="cb5-405"><a href="#cb5-405" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3931</span></span>
+<span id="cb5-406"><a href="#cb5-406" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3941</span></span>
+<span id="cb5-407"><a href="#cb5-407" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3951</span></span>
+<span id="cb5-408"><a href="#cb5-408" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3961</span></span>
+<span id="cb5-409"><a href="#cb5-409" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3971</span></span>
+<span id="cb5-410"><a href="#cb5-410" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3981</span></span>
+<span id="cb5-411"><a href="#cb5-411" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">3991</span></span>
+<span id="cb5-412"><a href="#cb5-412" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4001</span></span>
+<span id="cb5-413"><a href="#cb5-413" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4011</span></span>
+<span id="cb5-414"><a href="#cb5-414" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4021</span></span>
+<span id="cb5-415"><a href="#cb5-415" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4031</span></span>
+<span id="cb5-416"><a href="#cb5-416" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4041</span></span>
+<span id="cb5-417"><a href="#cb5-417" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4051</span></span>
+<span id="cb5-418"><a href="#cb5-418" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4061</span></span>
+<span id="cb5-419"><a href="#cb5-419" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4071</span></span>
+<span id="cb5-420"><a href="#cb5-420" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4081</span></span>
+<span id="cb5-421"><a href="#cb5-421" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4091</span></span>
+<span id="cb5-422"><a href="#cb5-422" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4101</span></span>
+<span id="cb5-423"><a href="#cb5-423" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4111</span></span>
+<span id="cb5-424"><a href="#cb5-424" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4121</span></span>
+<span id="cb5-425"><a href="#cb5-425" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4131</span></span>
+<span id="cb5-426"><a href="#cb5-426" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4141</span></span>
+<span id="cb5-427"><a href="#cb5-427" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4151</span></span>
+<span id="cb5-428"><a href="#cb5-428" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4161</span></span>
+<span id="cb5-429"><a href="#cb5-429" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4171</span></span>
+<span id="cb5-430"><a href="#cb5-430" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4181</span></span>
+<span id="cb5-431"><a href="#cb5-431" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4191</span></span>
+<span id="cb5-432"><a href="#cb5-432" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4201</span></span>
+<span id="cb5-433"><a href="#cb5-433" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4211</span></span>
+<span id="cb5-434"><a href="#cb5-434" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4221</span></span>
+<span id="cb5-435"><a href="#cb5-435" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4231</span></span>
+<span id="cb5-436"><a href="#cb5-436" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4241</span></span>
+<span id="cb5-437"><a href="#cb5-437" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4251</span></span>
+<span id="cb5-438"><a href="#cb5-438" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4261</span></span>
+<span id="cb5-439"><a href="#cb5-439" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4271</span></span>
+<span id="cb5-440"><a href="#cb5-440" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4281</span></span>
+<span id="cb5-441"><a href="#cb5-441" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4291</span></span>
+<span id="cb5-442"><a href="#cb5-442" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4301</span></span>
+<span id="cb5-443"><a href="#cb5-443" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4311</span></span>
+<span id="cb5-444"><a href="#cb5-444" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4321</span></span>
+<span id="cb5-445"><a href="#cb5-445" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4331</span></span>
+<span id="cb5-446"><a href="#cb5-446" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4341</span></span>
+<span id="cb5-447"><a href="#cb5-447" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4351</span></span>
+<span id="cb5-448"><a href="#cb5-448" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4361</span></span>
+<span id="cb5-449"><a href="#cb5-449" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4371</span></span>
+<span id="cb5-450"><a href="#cb5-450" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4381</span></span>
+<span id="cb5-451"><a href="#cb5-451" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4391</span></span>
+<span id="cb5-452"><a href="#cb5-452" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4401</span></span>
+<span id="cb5-453"><a href="#cb5-453" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4411</span></span>
+<span id="cb5-454"><a href="#cb5-454" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4421</span></span>
+<span id="cb5-455"><a href="#cb5-455" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4431</span></span>
+<span id="cb5-456"><a href="#cb5-456" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4441</span></span>
+<span id="cb5-457"><a href="#cb5-457" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4451</span></span>
+<span id="cb5-458"><a href="#cb5-458" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4461</span></span>
+<span id="cb5-459"><a href="#cb5-459" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4471</span></span>
+<span id="cb5-460"><a href="#cb5-460" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4481</span></span>
+<span id="cb5-461"><a href="#cb5-461" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4491</span></span>
+<span id="cb5-462"><a href="#cb5-462" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4501</span></span>
+<span id="cb5-463"><a href="#cb5-463" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4511</span></span>
+<span id="cb5-464"><a href="#cb5-464" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4521</span></span>
+<span id="cb5-465"><a href="#cb5-465" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4531</span></span>
+<span id="cb5-466"><a href="#cb5-466" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4541</span></span>
+<span id="cb5-467"><a href="#cb5-467" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4551</span></span>
+<span id="cb5-468"><a href="#cb5-468" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4561</span></span>
+<span id="cb5-469"><a href="#cb5-469" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4571</span></span>
+<span id="cb5-470"><a href="#cb5-470" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4581</span></span>
+<span id="cb5-471"><a href="#cb5-471" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4591</span></span>
+<span id="cb5-472"><a href="#cb5-472" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4601</span></span>
+<span id="cb5-473"><a href="#cb5-473" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4611</span></span>
+<span id="cb5-474"><a href="#cb5-474" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4621</span></span>
+<span id="cb5-475"><a href="#cb5-475" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4631</span></span>
+<span id="cb5-476"><a href="#cb5-476" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4641</span></span>
+<span id="cb5-477"><a href="#cb5-477" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4651</span></span>
+<span id="cb5-478"><a href="#cb5-478" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4661</span></span>
+<span id="cb5-479"><a href="#cb5-479" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4671</span></span>
+<span id="cb5-480"><a href="#cb5-480" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4681</span></span>
+<span id="cb5-481"><a href="#cb5-481" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4691</span></span>
+<span id="cb5-482"><a href="#cb5-482" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4701</span></span>
+<span id="cb5-483"><a href="#cb5-483" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4711</span></span>
+<span id="cb5-484"><a href="#cb5-484" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4721</span></span>
+<span id="cb5-485"><a href="#cb5-485" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4731</span></span>
+<span id="cb5-486"><a href="#cb5-486" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4741</span></span>
+<span id="cb5-487"><a href="#cb5-487" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4751</span></span>
+<span id="cb5-488"><a href="#cb5-488" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4761</span></span>
+<span id="cb5-489"><a href="#cb5-489" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4771</span></span>
+<span id="cb5-490"><a href="#cb5-490" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4781</span></span>
+<span id="cb5-491"><a href="#cb5-491" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4791</span></span>
+<span id="cb5-492"><a href="#cb5-492" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4801</span></span>
+<span id="cb5-493"><a href="#cb5-493" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4811</span></span>
+<span id="cb5-494"><a href="#cb5-494" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4821</span></span>
+<span id="cb5-495"><a href="#cb5-495" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4831</span></span>
+<span id="cb5-496"><a href="#cb5-496" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4841</span></span>
+<span id="cb5-497"><a href="#cb5-497" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4851</span></span>
+<span id="cb5-498"><a href="#cb5-498" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4861</span></span>
+<span id="cb5-499"><a href="#cb5-499" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4871</span></span>
+<span id="cb5-500"><a href="#cb5-500" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4881</span></span>
+<span id="cb5-501"><a href="#cb5-501" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4891</span></span>
+<span id="cb5-502"><a href="#cb5-502" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4901</span></span>
+<span id="cb5-503"><a href="#cb5-503" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4911</span></span>
+<span id="cb5-504"><a href="#cb5-504" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4921</span></span>
+<span id="cb5-505"><a href="#cb5-505" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4931</span></span>
+<span id="cb5-506"><a href="#cb5-506" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4941</span></span>
+<span id="cb5-507"><a href="#cb5-507" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4951</span></span>
+<span id="cb5-508"><a href="#cb5-508" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4961</span></span>
+<span id="cb5-509"><a href="#cb5-509" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4971</span></span>
+<span id="cb5-510"><a href="#cb5-510" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4981</span></span>
+<span id="cb5-511"><a href="#cb5-511" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">4991</span></span>
+<span id="cb5-512"><a href="#cb5-512" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5001</span></span>
+<span id="cb5-513"><a href="#cb5-513" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5011</span></span>
+<span id="cb5-514"><a href="#cb5-514" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5021</span></span>
+<span id="cb5-515"><a href="#cb5-515" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5031</span></span>
+<span id="cb5-516"><a href="#cb5-516" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5041</span></span>
+<span id="cb5-517"><a href="#cb5-517" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5051</span></span>
+<span id="cb5-518"><a href="#cb5-518" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5061</span></span>
+<span id="cb5-519"><a href="#cb5-519" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5071</span></span>
+<span id="cb5-520"><a href="#cb5-520" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5081</span></span>
+<span id="cb5-521"><a href="#cb5-521" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5091</span></span>
+<span id="cb5-522"><a href="#cb5-522" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5101</span></span>
+<span id="cb5-523"><a href="#cb5-523" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5111</span></span>
+<span id="cb5-524"><a href="#cb5-524" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5121</span></span>
+<span id="cb5-525"><a href="#cb5-525" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5131</span></span>
+<span id="cb5-526"><a href="#cb5-526" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5141</span></span>
+<span id="cb5-527"><a href="#cb5-527" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5151</span></span>
+<span id="cb5-528"><a href="#cb5-528" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5161</span></span>
+<span id="cb5-529"><a href="#cb5-529" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5171</span></span>
+<span id="cb5-530"><a href="#cb5-530" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5181</span></span>
+<span id="cb5-531"><a href="#cb5-531" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5191</span></span>
+<span id="cb5-532"><a href="#cb5-532" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5201</span></span>
+<span id="cb5-533"><a href="#cb5-533" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5211</span></span>
+<span id="cb5-534"><a href="#cb5-534" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5221</span></span>
+<span id="cb5-535"><a href="#cb5-535" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5231</span></span>
+<span id="cb5-536"><a href="#cb5-536" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5241</span></span>
+<span id="cb5-537"><a href="#cb5-537" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5251</span></span>
+<span id="cb5-538"><a href="#cb5-538" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5261</span></span>
+<span id="cb5-539"><a href="#cb5-539" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5271</span></span>
+<span id="cb5-540"><a href="#cb5-540" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5281</span></span>
+<span id="cb5-541"><a href="#cb5-541" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5291</span></span>
+<span id="cb5-542"><a href="#cb5-542" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5301</span></span>
+<span id="cb5-543"><a href="#cb5-543" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5311</span></span>
+<span id="cb5-544"><a href="#cb5-544" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5321</span></span>
+<span id="cb5-545"><a href="#cb5-545" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5331</span></span>
+<span id="cb5-546"><a href="#cb5-546" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5341</span></span>
+<span id="cb5-547"><a href="#cb5-547" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5351</span></span>
+<span id="cb5-548"><a href="#cb5-548" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5361</span></span>
+<span id="cb5-549"><a href="#cb5-549" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5371</span></span>
+<span id="cb5-550"><a href="#cb5-550" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5381</span></span>
+<span id="cb5-551"><a href="#cb5-551" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5391</span></span>
+<span id="cb5-552"><a href="#cb5-552" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5401</span></span>
+<span id="cb5-553"><a href="#cb5-553" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5411</span></span>
+<span id="cb5-554"><a href="#cb5-554" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5421</span></span>
+<span id="cb5-555"><a href="#cb5-555" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5431</span></span>
+<span id="cb5-556"><a href="#cb5-556" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5441</span></span>
+<span id="cb5-557"><a href="#cb5-557" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5451</span></span>
+<span id="cb5-558"><a href="#cb5-558" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5461</span></span>
+<span id="cb5-559"><a href="#cb5-559" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5471</span></span>
+<span id="cb5-560"><a href="#cb5-560" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5481</span></span>
+<span id="cb5-561"><a href="#cb5-561" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5491</span></span>
+<span id="cb5-562"><a href="#cb5-562" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5501</span></span>
+<span id="cb5-563"><a href="#cb5-563" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5511</span></span>
+<span id="cb5-564"><a href="#cb5-564" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5521</span></span>
+<span id="cb5-565"><a href="#cb5-565" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5531</span></span>
+<span id="cb5-566"><a href="#cb5-566" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5541</span></span>
+<span id="cb5-567"><a href="#cb5-567" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5551</span></span>
+<span id="cb5-568"><a href="#cb5-568" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5561</span></span>
+<span id="cb5-569"><a href="#cb5-569" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5571</span></span>
+<span id="cb5-570"><a href="#cb5-570" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5581</span></span>
+<span id="cb5-571"><a href="#cb5-571" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5591</span></span>
+<span id="cb5-572"><a href="#cb5-572" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5601</span></span>
+<span id="cb5-573"><a href="#cb5-573" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5611</span></span>
+<span id="cb5-574"><a href="#cb5-574" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5621</span></span>
+<span id="cb5-575"><a href="#cb5-575" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5631</span></span>
+<span id="cb5-576"><a href="#cb5-576" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5641</span></span>
+<span id="cb5-577"><a href="#cb5-577" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5651</span></span>
+<span id="cb5-578"><a href="#cb5-578" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5661</span></span>
+<span id="cb5-579"><a href="#cb5-579" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5671</span></span>
+<span id="cb5-580"><a href="#cb5-580" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5681</span></span>
+<span id="cb5-581"><a href="#cb5-581" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5691</span></span>
+<span id="cb5-582"><a href="#cb5-582" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5701</span></span>
+<span id="cb5-583"><a href="#cb5-583" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5711</span></span>
+<span id="cb5-584"><a href="#cb5-584" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5721</span></span>
+<span id="cb5-585"><a href="#cb5-585" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5731</span></span>
+<span id="cb5-586"><a href="#cb5-586" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5741</span></span>
+<span id="cb5-587"><a href="#cb5-587" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5751</span></span>
+<span id="cb5-588"><a href="#cb5-588" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5761</span></span>
+<span id="cb5-589"><a href="#cb5-589" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5771</span></span>
+<span id="cb5-590"><a href="#cb5-590" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5781</span></span>
+<span id="cb5-591"><a href="#cb5-591" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5791</span></span>
+<span id="cb5-592"><a href="#cb5-592" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5801</span></span>
+<span id="cb5-593"><a href="#cb5-593" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5811</span></span>
+<span id="cb5-594"><a href="#cb5-594" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5821</span></span>
+<span id="cb5-595"><a href="#cb5-595" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5831</span></span>
+<span id="cb5-596"><a href="#cb5-596" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5841</span></span>
+<span id="cb5-597"><a href="#cb5-597" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5851</span></span>
+<span id="cb5-598"><a href="#cb5-598" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5861</span></span>
+<span id="cb5-599"><a href="#cb5-599" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5871</span></span>
+<span id="cb5-600"><a href="#cb5-600" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5881</span></span>
+<span id="cb5-601"><a href="#cb5-601" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5891</span></span>
+<span id="cb5-602"><a href="#cb5-602" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5901</span></span>
+<span id="cb5-603"><a href="#cb5-603" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5911</span></span>
+<span id="cb5-604"><a href="#cb5-604" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5921</span></span>
+<span id="cb5-605"><a href="#cb5-605" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5931</span></span>
+<span id="cb5-606"><a href="#cb5-606" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5941</span></span>
+<span id="cb5-607"><a href="#cb5-607" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5951</span></span>
+<span id="cb5-608"><a href="#cb5-608" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5961</span></span>
+<span id="cb5-609"><a href="#cb5-609" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5971</span></span>
+<span id="cb5-610"><a href="#cb5-610" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5981</span></span>
+<span id="cb5-611"><a href="#cb5-611" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">5991</span></span>
+<span id="cb5-612"><a href="#cb5-612" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6001</span></span>
+<span id="cb5-613"><a href="#cb5-613" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6011</span></span>
+<span id="cb5-614"><a href="#cb5-614" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6021</span></span>
+<span id="cb5-615"><a href="#cb5-615" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6031</span></span>
+<span id="cb5-616"><a href="#cb5-616" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6041</span></span>
+<span id="cb5-617"><a href="#cb5-617" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6051</span></span>
+<span id="cb5-618"><a href="#cb5-618" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6061</span></span>
+<span id="cb5-619"><a href="#cb5-619" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6071</span></span>
+<span id="cb5-620"><a href="#cb5-620" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6081</span></span>
+<span id="cb5-621"><a href="#cb5-621" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6091</span></span>
+<span id="cb5-622"><a href="#cb5-622" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6101</span></span>
+<span id="cb5-623"><a href="#cb5-623" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6111</span></span>
+<span id="cb5-624"><a href="#cb5-624" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6121</span></span>
+<span id="cb5-625"><a href="#cb5-625" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6131</span></span>
+<span id="cb5-626"><a href="#cb5-626" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6141</span></span>
+<span id="cb5-627"><a href="#cb5-627" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6151</span></span>
+<span id="cb5-628"><a href="#cb5-628" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6161</span></span>
+<span id="cb5-629"><a href="#cb5-629" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6171</span></span>
+<span id="cb5-630"><a href="#cb5-630" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6181</span></span>
+<span id="cb5-631"><a href="#cb5-631" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6191</span></span>
+<span id="cb5-632"><a href="#cb5-632" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6201</span></span>
+<span id="cb5-633"><a href="#cb5-633" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6211</span></span>
+<span id="cb5-634"><a href="#cb5-634" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6221</span></span>
+<span id="cb5-635"><a href="#cb5-635" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6231</span></span>
+<span id="cb5-636"><a href="#cb5-636" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6241</span></span>
+<span id="cb5-637"><a href="#cb5-637" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6251</span></span>
+<span id="cb5-638"><a href="#cb5-638" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6261</span></span>
+<span id="cb5-639"><a href="#cb5-639" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6271</span></span>
+<span id="cb5-640"><a href="#cb5-640" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6281</span></span>
+<span id="cb5-641"><a href="#cb5-641" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6291</span></span>
+<span id="cb5-642"><a href="#cb5-642" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6301</span></span>
+<span id="cb5-643"><a href="#cb5-643" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6311</span></span>
+<span id="cb5-644"><a href="#cb5-644" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6321</span></span>
+<span id="cb5-645"><a href="#cb5-645" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6331</span></span>
+<span id="cb5-646"><a href="#cb5-646" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6341</span></span>
+<span id="cb5-647"><a href="#cb5-647" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6351</span></span>
+<span id="cb5-648"><a href="#cb5-648" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6361</span></span>
+<span id="cb5-649"><a href="#cb5-649" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6371</span></span>
+<span id="cb5-650"><a href="#cb5-650" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6381</span></span>
+<span id="cb5-651"><a href="#cb5-651" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6391</span></span>
+<span id="cb5-652"><a href="#cb5-652" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6401</span></span>
+<span id="cb5-653"><a href="#cb5-653" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6411</span></span>
+<span id="cb5-654"><a href="#cb5-654" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6421</span></span>
+<span id="cb5-655"><a href="#cb5-655" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6431</span></span>
+<span id="cb5-656"><a href="#cb5-656" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6441</span></span>
+<span id="cb5-657"><a href="#cb5-657" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6451</span></span>
+<span id="cb5-658"><a href="#cb5-658" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6461</span></span>
+<span id="cb5-659"><a href="#cb5-659" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6471</span></span>
+<span id="cb5-660"><a href="#cb5-660" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6481</span></span>
+<span id="cb5-661"><a href="#cb5-661" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6491</span></span>
+<span id="cb5-662"><a href="#cb5-662" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6501</span></span>
+<span id="cb5-663"><a href="#cb5-663" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6511</span></span>
+<span id="cb5-664"><a href="#cb5-664" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6521</span></span>
+<span id="cb5-665"><a href="#cb5-665" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6531</span></span>
+<span id="cb5-666"><a href="#cb5-666" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6541</span></span>
+<span id="cb5-667"><a href="#cb5-667" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6551</span></span>
+<span id="cb5-668"><a href="#cb5-668" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6561</span></span>
+<span id="cb5-669"><a href="#cb5-669" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6571</span></span>
+<span id="cb5-670"><a href="#cb5-670" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6581</span></span>
+<span id="cb5-671"><a href="#cb5-671" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6591</span></span>
+<span id="cb5-672"><a href="#cb5-672" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6601</span></span>
+<span id="cb5-673"><a href="#cb5-673" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6611</span></span>
+<span id="cb5-674"><a href="#cb5-674" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6621</span></span>
+<span id="cb5-675"><a href="#cb5-675" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6631</span></span>
+<span id="cb5-676"><a href="#cb5-676" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6641</span></span>
+<span id="cb5-677"><a href="#cb5-677" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6651</span></span>
+<span id="cb5-678"><a href="#cb5-678" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6661</span></span>
+<span id="cb5-679"><a href="#cb5-679" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6671</span></span>
+<span id="cb5-680"><a href="#cb5-680" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6681</span></span>
+<span id="cb5-681"><a href="#cb5-681" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6691</span></span>
+<span id="cb5-682"><a href="#cb5-682" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6701</span></span>
+<span id="cb5-683"><a href="#cb5-683" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6711</span></span>
+<span id="cb5-684"><a href="#cb5-684" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6721</span></span>
+<span id="cb5-685"><a href="#cb5-685" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6731</span></span>
+<span id="cb5-686"><a href="#cb5-686" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6741</span></span>
+<span id="cb5-687"><a href="#cb5-687" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6751</span></span>
+<span id="cb5-688"><a href="#cb5-688" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6761</span></span>
+<span id="cb5-689"><a href="#cb5-689" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6771</span></span>
+<span id="cb5-690"><a href="#cb5-690" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6781</span></span>
+<span id="cb5-691"><a href="#cb5-691" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6791</span></span>
+<span id="cb5-692"><a href="#cb5-692" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6801</span></span>
+<span id="cb5-693"><a href="#cb5-693" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6811</span></span>
+<span id="cb5-694"><a href="#cb5-694" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6821</span></span>
+<span id="cb5-695"><a href="#cb5-695" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6831</span></span>
+<span id="cb5-696"><a href="#cb5-696" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6841</span></span>
+<span id="cb5-697"><a href="#cb5-697" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6851</span></span>
+<span id="cb5-698"><a href="#cb5-698" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6861</span></span>
+<span id="cb5-699"><a href="#cb5-699" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6871</span></span>
+<span id="cb5-700"><a href="#cb5-700" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6881</span></span>
+<span id="cb5-701"><a href="#cb5-701" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6891</span></span>
+<span id="cb5-702"><a href="#cb5-702" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6901</span></span>
+<span id="cb5-703"><a href="#cb5-703" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6911</span></span>
+<span id="cb5-704"><a href="#cb5-704" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6921</span></span>
+<span id="cb5-705"><a href="#cb5-705" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6931</span></span>
+<span id="cb5-706"><a href="#cb5-706" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6941</span></span>
+<span id="cb5-707"><a href="#cb5-707" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6951</span></span>
+<span id="cb5-708"><a href="#cb5-708" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6961</span></span>
+<span id="cb5-709"><a href="#cb5-709" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6971</span></span>
+<span id="cb5-710"><a href="#cb5-710" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6981</span></span>
+<span id="cb5-711"><a href="#cb5-711" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">6991</span></span>
+<span id="cb5-712"><a href="#cb5-712" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7001</span></span>
+<span id="cb5-713"><a href="#cb5-713" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7011</span></span>
+<span id="cb5-714"><a href="#cb5-714" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7021</span></span>
+<span id="cb5-715"><a href="#cb5-715" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7031</span></span>
+<span id="cb5-716"><a href="#cb5-716" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7041</span></span>
+<span id="cb5-717"><a href="#cb5-717" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7051</span></span>
+<span id="cb5-718"><a href="#cb5-718" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7061</span></span>
+<span id="cb5-719"><a href="#cb5-719" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7071</span></span>
+<span id="cb5-720"><a href="#cb5-720" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7081</span></span>
+<span id="cb5-721"><a href="#cb5-721" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7091</span></span>
+<span id="cb5-722"><a href="#cb5-722" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7101</span></span>
+<span id="cb5-723"><a href="#cb5-723" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7111</span></span>
+<span id="cb5-724"><a href="#cb5-724" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7121</span></span>
+<span id="cb5-725"><a href="#cb5-725" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7131</span></span>
+<span id="cb5-726"><a href="#cb5-726" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7141</span></span>
+<span id="cb5-727"><a href="#cb5-727" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7151</span></span>
+<span id="cb5-728"><a href="#cb5-728" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7161</span></span>
+<span id="cb5-729"><a href="#cb5-729" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7171</span></span>
+<span id="cb5-730"><a href="#cb5-730" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7181</span></span>
+<span id="cb5-731"><a href="#cb5-731" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7191</span></span>
+<span id="cb5-732"><a href="#cb5-732" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7201</span></span>
+<span id="cb5-733"><a href="#cb5-733" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7211</span></span>
+<span id="cb5-734"><a href="#cb5-734" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7221</span></span>
+<span id="cb5-735"><a href="#cb5-735" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7231</span></span>
+<span id="cb5-736"><a href="#cb5-736" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7241</span></span>
+<span id="cb5-737"><a href="#cb5-737" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7251</span></span>
+<span id="cb5-738"><a href="#cb5-738" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7261</span></span>
+<span id="cb5-739"><a href="#cb5-739" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7271</span></span>
+<span id="cb5-740"><a href="#cb5-740" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7281</span></span>
+<span id="cb5-741"><a href="#cb5-741" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7291</span></span>
+<span id="cb5-742"><a href="#cb5-742" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7301</span></span>
+<span id="cb5-743"><a href="#cb5-743" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7311</span></span>
+<span id="cb5-744"><a href="#cb5-744" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7321</span></span>
+<span id="cb5-745"><a href="#cb5-745" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7331</span></span>
+<span id="cb5-746"><a href="#cb5-746" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7341</span></span>
+<span id="cb5-747"><a href="#cb5-747" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7351</span></span>
+<span id="cb5-748"><a href="#cb5-748" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7361</span></span>
+<span id="cb5-749"><a href="#cb5-749" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7371</span></span>
+<span id="cb5-750"><a href="#cb5-750" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7381</span></span>
+<span id="cb5-751"><a href="#cb5-751" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7391</span></span>
+<span id="cb5-752"><a href="#cb5-752" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7401</span></span>
+<span id="cb5-753"><a href="#cb5-753" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7411</span></span>
+<span id="cb5-754"><a href="#cb5-754" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7421</span></span>
+<span id="cb5-755"><a href="#cb5-755" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7431</span></span>
+<span id="cb5-756"><a href="#cb5-756" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7441</span></span>
+<span id="cb5-757"><a href="#cb5-757" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7451</span></span>
+<span id="cb5-758"><a href="#cb5-758" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7461</span></span>
+<span id="cb5-759"><a href="#cb5-759" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7471</span></span>
+<span id="cb5-760"><a href="#cb5-760" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7481</span></span>
+<span id="cb5-761"><a href="#cb5-761" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7491</span></span>
+<span id="cb5-762"><a href="#cb5-762" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7501</span></span>
+<span id="cb5-763"><a href="#cb5-763" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7511</span></span>
+<span id="cb5-764"><a href="#cb5-764" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7521</span></span>
+<span id="cb5-765"><a href="#cb5-765" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7531</span></span>
+<span id="cb5-766"><a href="#cb5-766" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7541</span></span>
+<span id="cb5-767"><a href="#cb5-767" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7551</span></span>
+<span id="cb5-768"><a href="#cb5-768" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7561</span></span>
+<span id="cb5-769"><a href="#cb5-769" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7571</span></span>
+<span id="cb5-770"><a href="#cb5-770" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7581</span></span>
+<span id="cb5-771"><a href="#cb5-771" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7591</span></span>
+<span id="cb5-772"><a href="#cb5-772" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7601</span></span>
+<span id="cb5-773"><a href="#cb5-773" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7611</span></span>
+<span id="cb5-774"><a href="#cb5-774" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7621</span></span>
+<span id="cb5-775"><a href="#cb5-775" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7631</span></span>
+<span id="cb5-776"><a href="#cb5-776" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7641</span></span>
+<span id="cb5-777"><a href="#cb5-777" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7651</span></span>
+<span id="cb5-778"><a href="#cb5-778" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7661</span></span>
+<span id="cb5-779"><a href="#cb5-779" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7671</span></span>
+<span id="cb5-780"><a href="#cb5-780" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7681</span></span>
+<span id="cb5-781"><a href="#cb5-781" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7691</span></span>
+<span id="cb5-782"><a href="#cb5-782" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7701</span></span>
+<span id="cb5-783"><a href="#cb5-783" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7711</span></span>
+<span id="cb5-784"><a href="#cb5-784" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7721</span></span>
+<span id="cb5-785"><a href="#cb5-785" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7731</span></span>
+<span id="cb5-786"><a href="#cb5-786" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7741</span></span>
+<span id="cb5-787"><a href="#cb5-787" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7751</span></span>
+<span id="cb5-788"><a href="#cb5-788" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7761</span></span>
+<span id="cb5-789"><a href="#cb5-789" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7771</span></span>
+<span id="cb5-790"><a href="#cb5-790" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7781</span></span>
+<span id="cb5-791"><a href="#cb5-791" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7791</span></span>
+<span id="cb5-792"><a href="#cb5-792" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7801</span></span>
+<span id="cb5-793"><a href="#cb5-793" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7811</span></span>
+<span id="cb5-794"><a href="#cb5-794" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7821</span></span>
+<span id="cb5-795"><a href="#cb5-795" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7831</span></span>
+<span id="cb5-796"><a href="#cb5-796" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7841</span></span>
+<span id="cb5-797"><a href="#cb5-797" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7851</span></span>
+<span id="cb5-798"><a href="#cb5-798" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7861</span></span>
+<span id="cb5-799"><a href="#cb5-799" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7871</span></span>
+<span id="cb5-800"><a href="#cb5-800" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7881</span></span>
+<span id="cb5-801"><a href="#cb5-801" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7891</span></span>
+<span id="cb5-802"><a href="#cb5-802" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7901</span></span>
+<span id="cb5-803"><a href="#cb5-803" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7911</span></span>
+<span id="cb5-804"><a href="#cb5-804" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7921</span></span>
+<span id="cb5-805"><a href="#cb5-805" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7931</span></span>
+<span id="cb5-806"><a href="#cb5-806" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7941</span></span>
+<span id="cb5-807"><a href="#cb5-807" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7951</span></span>
+<span id="cb5-808"><a href="#cb5-808" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7961</span></span>
+<span id="cb5-809"><a href="#cb5-809" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7971</span></span>
+<span id="cb5-810"><a href="#cb5-810" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7981</span></span>
+<span id="cb5-811"><a href="#cb5-811" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">7991</span></span>
+<span id="cb5-812"><a href="#cb5-812" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8001</span></span>
+<span id="cb5-813"><a href="#cb5-813" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8011</span></span>
+<span id="cb5-814"><a href="#cb5-814" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8021</span></span>
+<span id="cb5-815"><a href="#cb5-815" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8031</span></span>
+<span id="cb5-816"><a href="#cb5-816" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8041</span></span>
+<span id="cb5-817"><a href="#cb5-817" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8051</span></span>
+<span id="cb5-818"><a href="#cb5-818" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8061</span></span>
+<span id="cb5-819"><a href="#cb5-819" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8071</span></span>
+<span id="cb5-820"><a href="#cb5-820" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8081</span></span>
+<span id="cb5-821"><a href="#cb5-821" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8091</span></span>
+<span id="cb5-822"><a href="#cb5-822" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8101</span></span>
+<span id="cb5-823"><a href="#cb5-823" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8111</span></span>
+<span id="cb5-824"><a href="#cb5-824" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8121</span></span>
+<span id="cb5-825"><a href="#cb5-825" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8131</span></span>
+<span id="cb5-826"><a href="#cb5-826" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8141</span></span>
+<span id="cb5-827"><a href="#cb5-827" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8151</span></span>
+<span id="cb5-828"><a href="#cb5-828" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8161</span></span>
+<span id="cb5-829"><a href="#cb5-829" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8171</span></span>
+<span id="cb5-830"><a href="#cb5-830" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8181</span></span>
+<span id="cb5-831"><a href="#cb5-831" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8191</span></span>
+<span id="cb5-832"><a href="#cb5-832" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8201</span></span>
+<span id="cb5-833"><a href="#cb5-833" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8211</span></span>
+<span id="cb5-834"><a href="#cb5-834" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8221</span></span>
+<span id="cb5-835"><a href="#cb5-835" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8231</span></span>
+<span id="cb5-836"><a href="#cb5-836" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8241</span></span>
+<span id="cb5-837"><a href="#cb5-837" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8251</span></span>
+<span id="cb5-838"><a href="#cb5-838" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8261</span></span>
+<span id="cb5-839"><a href="#cb5-839" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8271</span></span>
+<span id="cb5-840"><a href="#cb5-840" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8281</span></span>
+<span id="cb5-841"><a href="#cb5-841" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8291</span></span>
+<span id="cb5-842"><a href="#cb5-842" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8301</span></span>
+<span id="cb5-843"><a href="#cb5-843" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8311</span></span>
+<span id="cb5-844"><a href="#cb5-844" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8321</span></span>
+<span id="cb5-845"><a href="#cb5-845" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8331</span></span>
+<span id="cb5-846"><a href="#cb5-846" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8341</span></span>
+<span id="cb5-847"><a href="#cb5-847" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8351</span></span>
+<span id="cb5-848"><a href="#cb5-848" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8361</span></span>
+<span id="cb5-849"><a href="#cb5-849" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8371</span></span>
+<span id="cb5-850"><a href="#cb5-850" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8381</span></span>
+<span id="cb5-851"><a href="#cb5-851" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8391</span></span>
+<span id="cb5-852"><a href="#cb5-852" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8401</span></span>
+<span id="cb5-853"><a href="#cb5-853" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8411</span></span>
+<span id="cb5-854"><a href="#cb5-854" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8421</span></span>
+<span id="cb5-855"><a href="#cb5-855" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8431</span></span>
+<span id="cb5-856"><a href="#cb5-856" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8441</span></span>
+<span id="cb5-857"><a href="#cb5-857" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8451</span></span>
+<span id="cb5-858"><a href="#cb5-858" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8461</span></span>
+<span id="cb5-859"><a href="#cb5-859" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8471</span></span>
+<span id="cb5-860"><a href="#cb5-860" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8481</span></span>
+<span id="cb5-861"><a href="#cb5-861" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8491</span></span>
+<span id="cb5-862"><a href="#cb5-862" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8501</span></span>
+<span id="cb5-863"><a href="#cb5-863" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8511</span></span>
+<span id="cb5-864"><a href="#cb5-864" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8521</span></span>
+<span id="cb5-865"><a href="#cb5-865" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8531</span></span>
+<span id="cb5-866"><a href="#cb5-866" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8541</span></span>
+<span id="cb5-867"><a href="#cb5-867" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8551</span></span>
+<span id="cb5-868"><a href="#cb5-868" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8561</span></span>
+<span id="cb5-869"><a href="#cb5-869" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8571</span></span>
+<span id="cb5-870"><a href="#cb5-870" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8581</span></span>
+<span id="cb5-871"><a href="#cb5-871" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8591</span></span>
+<span id="cb5-872"><a href="#cb5-872" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8601</span></span>
+<span id="cb5-873"><a href="#cb5-873" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8611</span></span>
+<span id="cb5-874"><a href="#cb5-874" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8621</span></span>
+<span id="cb5-875"><a href="#cb5-875" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8631</span></span>
+<span id="cb5-876"><a href="#cb5-876" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8641</span></span>
+<span id="cb5-877"><a href="#cb5-877" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8651</span></span>
+<span id="cb5-878"><a href="#cb5-878" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8661</span></span>
+<span id="cb5-879"><a href="#cb5-879" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8671</span></span>
+<span id="cb5-880"><a href="#cb5-880" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8681</span></span>
+<span id="cb5-881"><a href="#cb5-881" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8691</span></span>
+<span id="cb5-882"><a href="#cb5-882" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8701</span></span>
+<span id="cb5-883"><a href="#cb5-883" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8711</span></span>
+<span id="cb5-884"><a href="#cb5-884" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8721</span></span>
+<span id="cb5-885"><a href="#cb5-885" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8731</span></span>
+<span id="cb5-886"><a href="#cb5-886" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8741</span></span>
+<span id="cb5-887"><a href="#cb5-887" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8751</span></span>
+<span id="cb5-888"><a href="#cb5-888" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8761</span></span>
+<span id="cb5-889"><a href="#cb5-889" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8771</span></span>
+<span id="cb5-890"><a href="#cb5-890" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8781</span></span>
+<span id="cb5-891"><a href="#cb5-891" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8791</span></span>
+<span id="cb5-892"><a href="#cb5-892" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8801</span></span>
+<span id="cb5-893"><a href="#cb5-893" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8811</span></span>
+<span id="cb5-894"><a href="#cb5-894" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8821</span></span>
+<span id="cb5-895"><a href="#cb5-895" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8831</span></span>
+<span id="cb5-896"><a href="#cb5-896" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8841</span></span>
+<span id="cb5-897"><a href="#cb5-897" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8851</span></span>
+<span id="cb5-898"><a href="#cb5-898" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8861</span></span>
+<span id="cb5-899"><a href="#cb5-899" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8871</span></span>
+<span id="cb5-900"><a href="#cb5-900" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8881</span></span>
+<span id="cb5-901"><a href="#cb5-901" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8891</span></span>
+<span id="cb5-902"><a href="#cb5-902" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8901</span></span>
+<span id="cb5-903"><a href="#cb5-903" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8911</span></span>
+<span id="cb5-904"><a href="#cb5-904" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8921</span></span>
+<span id="cb5-905"><a href="#cb5-905" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8931</span></span>
+<span id="cb5-906"><a href="#cb5-906" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8941</span></span>
+<span id="cb5-907"><a href="#cb5-907" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8951</span></span>
+<span id="cb5-908"><a href="#cb5-908" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8961</span></span>
+<span id="cb5-909"><a href="#cb5-909" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8971</span></span>
+<span id="cb5-910"><a href="#cb5-910" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8981</span></span>
+<span id="cb5-911"><a href="#cb5-911" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">8991</span></span>
+<span id="cb5-912"><a href="#cb5-912" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9001</span></span>
+<span id="cb5-913"><a href="#cb5-913" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9011</span></span>
+<span id="cb5-914"><a href="#cb5-914" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9021</span></span>
+<span id="cb5-915"><a href="#cb5-915" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9031</span></span>
+<span id="cb5-916"><a href="#cb5-916" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9041</span></span>
+<span id="cb5-917"><a href="#cb5-917" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9051</span></span>
+<span id="cb5-918"><a href="#cb5-918" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9061</span></span>
+<span id="cb5-919"><a href="#cb5-919" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9071</span></span>
+<span id="cb5-920"><a href="#cb5-920" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9081</span></span>
+<span id="cb5-921"><a href="#cb5-921" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9091</span></span>
+<span id="cb5-922"><a href="#cb5-922" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9101</span></span>
+<span id="cb5-923"><a href="#cb5-923" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9111</span></span>
+<span id="cb5-924"><a href="#cb5-924" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9121</span></span>
+<span id="cb5-925"><a href="#cb5-925" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9131</span></span>
+<span id="cb5-926"><a href="#cb5-926" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9141</span></span>
+<span id="cb5-927"><a href="#cb5-927" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9151</span></span>
+<span id="cb5-928"><a href="#cb5-928" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9161</span></span>
+<span id="cb5-929"><a href="#cb5-929" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9171</span></span>
+<span id="cb5-930"><a href="#cb5-930" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9181</span></span>
+<span id="cb5-931"><a href="#cb5-931" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9191</span></span>
+<span id="cb5-932"><a href="#cb5-932" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9201</span></span>
+<span id="cb5-933"><a href="#cb5-933" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9211</span></span>
+<span id="cb5-934"><a href="#cb5-934" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9221</span></span>
+<span id="cb5-935"><a href="#cb5-935" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9231</span></span>
+<span id="cb5-936"><a href="#cb5-936" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9241</span></span>
+<span id="cb5-937"><a href="#cb5-937" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9251</span></span>
+<span id="cb5-938"><a href="#cb5-938" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9261</span></span>
+<span id="cb5-939"><a href="#cb5-939" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9271</span></span>
+<span id="cb5-940"><a href="#cb5-940" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9281</span></span>
+<span id="cb5-941"><a href="#cb5-941" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9291</span></span>
+<span id="cb5-942"><a href="#cb5-942" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9301</span></span>
+<span id="cb5-943"><a href="#cb5-943" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9311</span></span>
+<span id="cb5-944"><a href="#cb5-944" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9321</span></span>
+<span id="cb5-945"><a href="#cb5-945" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9331</span></span>
+<span id="cb5-946"><a href="#cb5-946" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9341</span></span>
+<span id="cb5-947"><a href="#cb5-947" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9351</span></span>
+<span id="cb5-948"><a href="#cb5-948" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9361</span></span>
+<span id="cb5-949"><a href="#cb5-949" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9371</span></span>
+<span id="cb5-950"><a href="#cb5-950" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9381</span></span>
+<span id="cb5-951"><a href="#cb5-951" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9391</span></span>
+<span id="cb5-952"><a href="#cb5-952" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9401</span></span>
+<span id="cb5-953"><a href="#cb5-953" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9411</span></span>
+<span id="cb5-954"><a href="#cb5-954" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9421</span></span>
+<span id="cb5-955"><a href="#cb5-955" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9431</span></span>
+<span id="cb5-956"><a href="#cb5-956" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9441</span></span>
+<span id="cb5-957"><a href="#cb5-957" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9451</span></span>
+<span id="cb5-958"><a href="#cb5-958" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9461</span></span>
+<span id="cb5-959"><a href="#cb5-959" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9471</span></span>
+<span id="cb5-960"><a href="#cb5-960" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9481</span></span>
+<span id="cb5-961"><a href="#cb5-961" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9491</span></span>
+<span id="cb5-962"><a href="#cb5-962" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9501</span></span>
+<span id="cb5-963"><a href="#cb5-963" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9511</span></span>
+<span id="cb5-964"><a href="#cb5-964" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9521</span></span>
+<span id="cb5-965"><a href="#cb5-965" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9531</span></span>
+<span id="cb5-966"><a href="#cb5-966" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9541</span></span>
+<span id="cb5-967"><a href="#cb5-967" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9551</span></span>
+<span id="cb5-968"><a href="#cb5-968" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9561</span></span>
+<span id="cb5-969"><a href="#cb5-969" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9571</span></span>
+<span id="cb5-970"><a href="#cb5-970" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9581</span></span>
+<span id="cb5-971"><a href="#cb5-971" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9591</span></span>
+<span id="cb5-972"><a href="#cb5-972" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9601</span></span>
+<span id="cb5-973"><a href="#cb5-973" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9611</span></span>
+<span id="cb5-974"><a href="#cb5-974" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9621</span></span>
+<span id="cb5-975"><a href="#cb5-975" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9631</span></span>
+<span id="cb5-976"><a href="#cb5-976" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9641</span></span>
+<span id="cb5-977"><a href="#cb5-977" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9651</span></span>
+<span id="cb5-978"><a href="#cb5-978" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9661</span></span>
+<span id="cb5-979"><a href="#cb5-979" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9671</span></span>
+<span id="cb5-980"><a href="#cb5-980" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9681</span></span>
+<span id="cb5-981"><a href="#cb5-981" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9691</span></span>
+<span id="cb5-982"><a href="#cb5-982" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9701</span></span>
+<span id="cb5-983"><a href="#cb5-983" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9711</span></span>
+<span id="cb5-984"><a href="#cb5-984" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9721</span></span>
+<span id="cb5-985"><a href="#cb5-985" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9731</span></span>
+<span id="cb5-986"><a href="#cb5-986" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9741</span></span>
+<span id="cb5-987"><a href="#cb5-987" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9751</span></span>
+<span id="cb5-988"><a href="#cb5-988" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9761</span></span>
+<span id="cb5-989"><a href="#cb5-989" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9771</span></span>
+<span id="cb5-990"><a href="#cb5-990" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9781</span></span>
+<span id="cb5-991"><a href="#cb5-991" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9791</span></span>
+<span id="cb5-992"><a href="#cb5-992" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9801</span></span>
+<span id="cb5-993"><a href="#cb5-993" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9811</span></span>
+<span id="cb5-994"><a href="#cb5-994" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9821</span></span>
+<span id="cb5-995"><a href="#cb5-995" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9831</span></span>
+<span id="cb5-996"><a href="#cb5-996" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9841</span></span>
+<span id="cb5-997"><a href="#cb5-997" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9851</span></span>
+<span id="cb5-998"><a href="#cb5-998" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9861</span></span>
+<span id="cb5-999"><a href="#cb5-999" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9871</span></span>
+<span id="cb5-1000"><a href="#cb5-1000" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9881</span></span>
+<span id="cb5-1001"><a href="#cb5-1001" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9891</span></span>
+<span id="cb5-1002"><a href="#cb5-1002" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9901</span></span>
+<span id="cb5-1003"><a href="#cb5-1003" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9911</span></span>
+<span id="cb5-1004"><a href="#cb5-1004" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9921</span></span>
+<span id="cb5-1005"><a href="#cb5-1005" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9931</span></span>
+<span id="cb5-1006"><a href="#cb5-1006" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9941</span></span>
+<span id="cb5-1007"><a href="#cb5-1007" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9951</span></span>
+<span id="cb5-1008"><a href="#cb5-1008" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9961</span></span>
+<span id="cb5-1009"><a href="#cb5-1009" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9971</span></span>
+<span id="cb5-1010"><a href="#cb5-1010" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9981</span></span>
+<span id="cb5-1011"><a href="#cb5-1011" aria-hidden="true" tabindex="-1"></a>t <span class="ot">=</span> <span class="dv">9991</span></span>
+<span id="cb5-1012"><a href="#cb5-1012" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-1013"><a href="#cb5-1013" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(compared)</span>
+<span id="cb5-1014"><a href="#cb5-1014" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 4</span></span>
+<span id="cb5-1015"><a href="#cb5-1015" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   fish_type [1]</span></span>
+<span id="cb5-1016"><a href="#cb5-1016" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;       t fish_type     mbp_n prop_res</span></span>
+<span id="cb5-1017"><a href="#cb5-1017" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;dbl&gt; &lt;chr&gt;         &lt;dbl&gt;    &lt;dbl&gt;</span></span>
+<span id="cb5-1018"><a href="#cb5-1018" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1     1 MRH Steelhead     3    0.266</span></span>
+<span id="cb5-1019"><a href="#cb5-1019" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2     1 MRH Steelhead    18    0.721</span></span>
+<span id="cb5-1020"><a href="#cb5-1020" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3     1 MRH Steelhead    33    0.801</span></span>
+<span id="cb5-1021"><a href="#cb5-1021" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4     1 MRH Steelhead    48    0.830</span></span>
+<span id="cb5-1022"><a href="#cb5-1022" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5     1 MRH Steelhead    63    0.824</span></span>
+<span id="cb5-1023"><a href="#cb5-1023" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6     1 MRH Steelhead    78    0.823</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">residence_plot</span>(compared, <span class="at">var_groups =</span> <span class="st">&quot;fish_type&quot;</span>, <span class="at">time_unit =</span> <span class="st">&quot;secs&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Transformation introduced infinite values in continuous y-axis</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># </span><span class="al">NOTE</span><span class="co">: The curves last longer than the longest time! This should indicate we</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># should add more times to test, and may need shorter intervals of n.</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Renormalized Sum of Squares</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>rSSR <span class="ot">&lt;-</span> <span class="fu">renorm_SSR</span>(compared, <span class="at">var_groups =</span> <span class="st">&quot;fish_type&quot;</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rSSR)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # A tibble: 6 × 5</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; # Groups:   fish_type [1]</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   fish_type     mbp_n    SSR     n      rSSR</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt;   &lt;chr&gt;         &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;     &lt;dbl&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 1 MRH Steelhead     3 1.17    1000 0.00117  </span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 2 MRH Steelhead    18 0.457   1000 0.000457 </span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 3 MRH Steelhead    33 0.148   1000 0.000148 </span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 4 MRH Steelhead    48 0.0108  1000 0.0000108</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 5 MRH Steelhead    63 0.0635  1000 0.0000635</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; 6 MRH Steelhead    78 0.0741  1000 0.0000741</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Thresholds for 99% and 99.5% of total range</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>thresh <span class="ot">&lt;-</span> telemetR<span class="sc">::</span><span class="fu">conv_thresholds</span>(rSSR, <span class="at">var_groups =</span> <span class="st">&quot;fish_type&quot;</span>, </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">thresh_levels =</span> <span class="fu">c</span>(<span class="fl">0.01</span>,<span class="fl">0.005</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>optimums <span class="ot">&lt;-</span> <span class="fu">opt_mbp</span>(rSSR, thresh)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rSSR_plot</span>(rSSR, optimums, <span class="at">var_groups =</span> <span class="st">&quot;fish_type&quot;</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Warning: Removed 6 rows containing missing values (`geom_line()`).</span></span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<pre><code>#&gt; Warning: Transformation introduced infinite values in continuous y-axis
+#&gt; Warning: Transformation introduced infinite values in continuous y-axis
+#&gt; Transformation introduced infinite values in continuous y-axis
+#&gt; `geom_smooth()` using formula = &#39;y ~ x&#39;
+#&gt; Warning: Removed 99 rows containing non-finite values (`stat_smooth()`).</code></pre>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Note: This would be a bad choice of maximum blanking period. We have not yet </span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># reached convergence</span></span></code></pre></div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
